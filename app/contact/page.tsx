@@ -47,7 +47,7 @@ export default function ContactPage() {
       id: "faq-1",
       title: "How do I find a job using a TopJobs-style reference number?",
       content:
-        "On the homepage or Find Jobs page, simply switch to 'Search by Reference No.' and enter the code (e.g. REF-MAS-2024-089). You will be navigated directly to that specific vacancy.",
+        "On the homepage or Find Jobs page search bar, simply enter the reference code (e.g. REF-MAS-2024-089). You will be navigated directly to that specific vacancy.",
     },
     {
       id: "faq-2",
