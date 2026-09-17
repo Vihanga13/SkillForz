@@ -27,6 +27,9 @@ import {
   ArrowUpRight,
   SendHorizontal,
   ShieldCheck,
+  Radio,
+  Fingerprint,
+  Sparkles,
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -157,110 +160,283 @@ export default function HomePage() {
     return categories.slice(0, 6);
   }, []);
 
+  const featuredRadarJobs = useMemo(() => {
+    return jobs.filter((j) => j.isFeatured || j.isUrgent).slice(0, 3);
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-bg text-ink-900 selection:bg-primary-100 selection:text-primary-900">
       <Navbar />
 
       <main className="flex-1">
-        {/* HERO SECTION: Clean, Focused, High-Impact */}
-        <section className="pt-12 pb-14 sm:pt-16 sm:pb-18 border-b border-border/80 bg-surface">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            {/* Subtle Brand Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ink-100 text-ink-700 text-xs font-semibold mb-5 border border-border">
-              <Compass className="h-3.5 w-3.5 text-primary-600" />
-              <span>Sri Lanka&apos;s Modern Career Directory</span>
-            </div>
+        {/* ========================================================================= */}
+        {/* UNIQUE ASYMMETRICAL HERO: Command Studio (Left) + Live Career Radar (Right) */}
+        {/* ========================================================================= */}
+        <section className="relative overflow-hidden pt-8 pb-14 sm:pt-12 sm:pb-20 border-b border-border/80 bg-gradient-to-b from-white via-surface to-bg">
+          {/* Subtle Ambient Blueprint Grid & Glow Effects */}
+          <div className="absolute inset-0 bg-grid-pattern opacity-60 pointer-events-none" />
+          <div className="absolute -top-32 -left-24 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 -right-24 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl pointer-events-none" />
 
-            {/* Clear, Minimalist Title */}
-            <h1 className="text-3xl sm:text-5xl font-black text-ink-900 tracking-tight font-heading leading-tight sm:leading-tight">
-              Find your next role in Sri Lanka.
-            </h1>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+              
+              {/* LEFT COLUMN: Editorial Narrative, Dual-Mode Search Console & Seeker Guarantees (7 Cols) */}
+              <div className="lg:col-span-7 flex flex-col items-start text-left">
+                {/* Live Activity Beacon Pill */}
+                <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-surface border border-border shadow-sm mb-5 text-xs font-semibold text-ink-700">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <span className="font-mono text-[11px] font-bold text-emerald-700 uppercase tracking-wide">Live Dispatch Radar</span>
+                  <span className="text-ink-300">•</span>
+                  <span className="text-ink-600 font-medium">Sri Lanka TopJobs™ Indexed</span>
+                </div>
 
-            {/* Understated Subtitle */}
-            <p className="mt-3.5 text-base sm:text-lg text-ink-500 max-w-2xl mx-auto leading-relaxed">
-              Explore verified vacancies from top employers — from fast-growing tech innovators to
-              premier national conglomerates. Indexed with authentic TopJobs reference codes.
-            </p>
+                {/* High-Impact Editorial Headline */}
+                <h1 className="text-3xl sm:text-5xl lg:text-[3.25rem] font-black text-ink-900 tracking-tight font-heading leading-[1.12]">
+                  The Definitive Career{" "}
+                  <span className="bg-gradient-to-r from-primary-600 via-primary-500 to-indigo-600 bg-clip-text text-transparent">
+                    Compass
+                  </span>{" "}
+                  for Sri Lanka.
+                </h1>
 
-            {/* Precision Search Console */}
-            <div className="mt-7 sm:mt-9">
-              <SearchBar />
-            </div>
+                {/* Understated Value Proposition */}
+                <p className="mt-4 text-base sm:text-lg text-ink-500 max-w-xl leading-relaxed">
+                  Discover verified vacancies from premier conglomerates and fast-scaling tech companies. Apply directly with zero login barriers, tracked via authentic TopJobs reference codes.
+                </p>
 
-            {/* Quick Filter Pills */}
-            <div className="mt-4 flex items-center justify-center flex-wrap gap-2 text-xs">
-              <span className="text-ink-400 font-medium mr-1">Quick:</span>
+                {/* Precision Search Console */}
+                <div className="mt-6 sm:mt-8 w-full">
+                  <SearchBar className="max-w-none mx-0" />
+                </div>
 
-              <button
-                type="button"
-                onClick={() =>
-                  setSelectedQuickFilter(selectedQuickFilter === "urgent" ? null : "urgent")
-                }
-                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border transition-all ${
-                  selectedQuickFilter === "urgent"
-                    ? "bg-red-50 text-accent-danger border-red-200 font-bold"
-                    : "bg-surface text-ink-600 border-border hover:border-ink-300"
-                }`}
-              >
-                <Flame className="h-3.5 w-3.5 text-amber-500" />
-                Urgent Deadlines
-              </button>
+                {/* Zero-Login Candidate Trust Guarantee Badges */}
+                <div className="mt-6 pt-5 border-t border-border/80 w-full flex flex-wrap items-center gap-y-2 gap-x-5 text-xs text-ink-600">
+                  <div className="flex items-center gap-2">
+                    <div className="h-5 w-5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0">
+                      <ShieldCheck className="h-3.5 w-3.5" />
+                    </div>
+                    <span className="font-medium"><strong className="text-ink-800">Zero Sign-In</strong> for Job Seekers</span>
+                  </div>
 
-              <button
-                type="button"
-                onClick={() =>
-                  setSelectedQuickFilter(selectedQuickFilter === "remote" ? null : "remote")
-                }
-                className={`px-3 py-1 rounded-full border transition-all ${
-                  selectedQuickFilter === "remote"
-                    ? "bg-primary-50 text-primary-700 border-primary-200 font-bold"
-                    : "bg-surface text-ink-600 border-border hover:border-ink-300"
-                }`}
-              >
-                Remote Friendly
-              </button>
+                  <div className="flex items-center gap-2">
+                    <div className="h-5 w-5 rounded-full bg-primary-50 border border-primary-200 flex items-center justify-center text-primary-600 shrink-0">
+                      <BadgeCheck className="h-3.5 w-3.5" />
+                    </div>
+                    <span className="font-medium"><strong className="text-ink-800">100% Verified</strong> Corporate Employers</span>
+                  </div>
 
-              <button
-                type="button"
-                onClick={() =>
-                  setSelectedQuickFilter(selectedQuickFilter === "dialog" ? null : "dialog")
-                }
-                className={`px-3 py-1 rounded-full border transition-all ${
-                  selectedQuickFilter === "dialog"
-                    ? "bg-primary-50 text-primary-700 border-primary-200 font-bold"
-                    : "bg-surface text-ink-600 border-border hover:border-ink-300"
-                }`}
-              >
-                Dialog Axiata
-              </button>
+                  <div className="flex items-center gap-2">
+                    <div className="h-5 w-5 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0">
+                      <Fingerprint className="h-3.5 w-3.5" />
+                    </div>
+                    <span className="font-medium"><strong className="text-ink-800">Official REF-IDs</strong> TopJobs Standard</span>
+                  </div>
+                </div>
 
-              <button
-                type="button"
-                onClick={() =>
-                  setSelectedQuickFilter(selectedQuickFilter === "mas" ? null : "mas")
-                }
-                className={`px-3 py-1 rounded-full border transition-all ${
-                  selectedQuickFilter === "mas"
-                    ? "bg-primary-50 text-primary-700 border-primary-200 font-bold"
-                    : "bg-surface text-ink-600 border-border hover:border-ink-300"
-                }`}
-              >
-                MAS Holdings
-              </button>
+                {/* Quick Filter Tag Row */}
+                <div className="mt-4 flex items-center flex-wrap gap-2 text-xs">
+                  <span className="text-ink-400 font-medium mr-1">Quick Filters:</span>
 
-              <button
-                type="button"
-                onClick={() =>
-                  setSelectedQuickFilter(selectedQuickFilter === "wso2" ? null : "wso2")
-                }
-                className={`px-3 py-1 rounded-full border transition-all ${
-                  selectedQuickFilter === "wso2"
-                    ? "bg-primary-50 text-primary-700 border-primary-200 font-bold"
-                    : "bg-surface text-ink-600 border-border hover:border-ink-300"
-                }`}
-              >
-                WSO2
-              </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSelectedQuickFilter(selectedQuickFilter === "urgent" ? null : "urgent")
+                    }
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border transition-all ${
+                      selectedQuickFilter === "urgent"
+                        ? "bg-red-50 text-accent-danger border-red-200 font-bold"
+                        : "bg-surface text-ink-600 border-border hover:border-ink-300"
+                    }`}
+                  >
+                    <Flame className="h-3.5 w-3.5 text-amber-500" />
+                    Urgent Deadlines
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSelectedQuickFilter(selectedQuickFilter === "remote" ? null : "remote")
+                    }
+                    className={`px-3 py-1 rounded-full border transition-all ${
+                      selectedQuickFilter === "remote"
+                        ? "bg-primary-50 text-primary-700 border-primary-200 font-bold"
+                        : "bg-surface text-ink-600 border-border hover:border-ink-300"
+                    }`}
+                  >
+                    Remote Friendly
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSelectedQuickFilter(selectedQuickFilter === "dialog" ? null : "dialog")
+                    }
+                    className={`px-3 py-1 rounded-full border transition-all ${
+                      selectedQuickFilter === "dialog"
+                        ? "bg-primary-50 text-primary-700 border-primary-200 font-bold"
+                        : "bg-surface text-ink-600 border-border hover:border-ink-300"
+                    }`}
+                  >
+                    Dialog Axiata
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSelectedQuickFilter(selectedQuickFilter === "mas" ? null : "mas")
+                    }
+                    className={`px-3 py-1 rounded-full border transition-all ${
+                      selectedQuickFilter === "mas"
+                        ? "bg-primary-50 text-primary-700 border-primary-200 font-bold"
+                        : "bg-surface text-ink-600 border-border hover:border-ink-300"
+                    }`}
+                  >
+                    MAS Holdings
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSelectedQuickFilter(selectedQuickFilter === "wso2" ? null : "wso2")
+                    }
+                    className={`px-3 py-1 rounded-full border transition-all ${
+                      selectedQuickFilter === "wso2"
+                        ? "bg-primary-50 text-primary-700 border-primary-200 font-bold"
+                        : "bg-surface text-ink-600 border-border hover:border-ink-300"
+                    }`}
+                  >
+                    WSO2
+                  </button>
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN: Live Vacancy Dispatch Board & Market Radar (5 Cols) */}
+              <div className="lg:col-span-5 relative mt-4 lg:mt-0">
+                {/* Decorative corner glow */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary-500/20 to-indigo-500/20 rounded-3xl blur-xl opacity-75 -z-10" />
+
+                {/* Dispatch Board Container */}
+                <div className="bg-surface/95 backdrop-blur-md rounded-3xl border border-border shadow-2xl p-5 sm:p-6 text-left">
+                  {/* Board Header */}
+                  <div className="flex items-center justify-between pb-4 border-b border-border">
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-8 w-8 rounded-xl bg-primary-50 border border-primary-200 flex items-center justify-center text-primary-600">
+                        <Radio className="h-4 w-4 animate-pulse" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <h3 className="text-xs font-black uppercase tracking-wider text-ink-900 font-heading">
+                            Live Opportunity Dispatch
+                          </h3>
+                        </div>
+                        <p className="text-[11px] text-ink-400 font-mono">
+                          Real-time Sri Lanka vacancies
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[11px] font-bold text-emerald-700">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span>{jobs.length} Active</span>
+                    </div>
+                  </div>
+
+                  {/* Micro Vacancy Cards Stream */}
+                  <div className="mt-4 space-y-3">
+                    {featuredRadarJobs.map((job) => {
+                      const daysInfo = calculateDaysRemaining(job.deadline);
+                      return (
+                        <Link
+                          key={job.id}
+                          href={`/find-jobs/${job.slug}`}
+                          className="group block p-3 rounded-2xl bg-bg/70 hover:bg-white border border-border/80 hover:border-primary-300 hover:shadow-md transition-all duration-200"
+                        >
+                          <div className="flex items-start justify-between gap-2.5">
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <Avatar
+                                src={job.company.logo}
+                                alt={job.company.name}
+                                size="sm"
+                                verified={job.company.verified}
+                                className="rounded-lg shrink-0"
+                              />
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-1">
+                                  <span className="text-[11px] font-semibold text-ink-600 truncate">
+                                    {job.company.name}
+                                  </span>
+                                  {job.company.verified && (
+                                    <BadgeCheck className="h-3 w-3 text-primary-600 shrink-0" />
+                                  )}
+                                </div>
+                                <h4 className="text-xs font-bold text-ink-900 group-hover:text-primary-600 transition-colors truncate">
+                                  {job.title}
+                                </h4>
+                              </div>
+                            </div>
+
+                            <ArrowUpRight className="h-3.5 w-3.5 text-ink-400 group-hover:text-primary-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 mt-1" />
+                          </div>
+
+                          {/* Meta Tags Row */}
+                          <div className="mt-2.5 flex items-center justify-between text-[11px] pt-2 border-t border-border/60">
+                            <span className="font-mono font-bold text-primary-700 bg-primary-50 px-1.5 py-0.5 rounded text-[10px] border border-primary-100">
+                              {job.referenceNumber}
+                            </span>
+
+                            <div className="flex items-center gap-2 text-ink-500 font-medium">
+                              <span>{job.location.city}</span>
+                              <span>&bull;</span>
+                              <span className="font-bold text-ink-800">
+                                {formatSalaryRange(job.minSalary, job.maxSalary, job.salaryPeriod)}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+
+                  {/* Market Telemetry Strip */}
+                  <div className="mt-4 pt-4 border-t border-border grid grid-cols-3 gap-2 text-center">
+                    <div className="p-2 rounded-xl bg-bg/50 border border-border/60">
+                      <p className="text-[10px] text-ink-400 uppercase font-semibold">Avg Response</p>
+                      <p className="text-xs font-black text-ink-900 font-heading mt-0.5">&lt; 24h</p>
+                    </div>
+                    <div className="p-2 rounded-xl bg-bg/50 border border-border/60">
+                      <p className="text-[10px] text-ink-400 uppercase font-semibold">Candidate Fee</p>
+                      <p className="text-xs font-black text-emerald-600 font-heading mt-0.5">Free (0/-)</p>
+                    </div>
+                    <div className="p-2 rounded-xl bg-bg/50 border border-border/60">
+                      <p className="text-[10px] text-ink-400 uppercase font-semibold">Verification</p>
+                      <p className="text-xs font-black text-primary-600 font-heading mt-0.5">100% TopJobs</p>
+                    </div>
+                  </div>
+
+                  {/* Direct Seeker Link */}
+                  <div className="mt-3 text-center">
+                    <Link
+                      href="/find-jobs"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors"
+                    >
+                      <span>Explore all {jobs.length} verified vacancies</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Floating Activity Accent Badge */}
+                <div className="hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-ink-900 text-white text-xs shadow-xl border border-ink-700 absolute -bottom-4 -left-6 z-10 animate-pulse">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="font-mono text-[11px] text-emerald-400 font-bold">RECENT DISPATCH:</span>
+                  <span className="text-ink-200 text-[11px]">Senior Automation Engineer (MAS)</span>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>

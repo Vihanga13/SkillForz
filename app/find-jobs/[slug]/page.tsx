@@ -199,13 +199,13 @@ export default function JobDetailsPage({
                         </Link>
                         <span>&bull;</span>
                         <span className="flex items-center gap-1">
-                          <MapPin className="h-4 w-4 text-primary-600" />
+                          <Navigation className="h-4 w-4 text-primary-600" />
                           {job.location.city}
                           {job.location.isRemote && " (Hybrid/Remote)"}
                         </span>
                         <span>&bull;</span>
                         <span className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
+                          <Timer className="h-4 w-4 text-ink-500" />
                           Posted {formatRelativeTime(job.postedAt)}
                         </span>
                       </div>
