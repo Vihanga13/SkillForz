@@ -12,6 +12,10 @@ import {
   MapPin,
   Building,
   Layers,
+  Bell,
+  CheckCircle2,
+  Compass,
+  ShieldCheck,
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -27,7 +31,6 @@ import { jobs } from "@/lib/data/jobs";
 import { categories } from "@/lib/data/categories";
 import { AICVMatcherModal } from "@/components/AICVMatcherModal";
 import { ParsedCV, JobMatchResult } from "@/lib/ai/cvMatcher";
-import { Bell, CheckCircle2 } from "lucide-react";
 
 function FindJobsContent() {
   const router = useRouter();
@@ -243,6 +246,50 @@ function FindJobsContent() {
           {/* Breadcrumb */}
           <div className="mb-4">
             <Breadcrumb items={[{ label: "Find Jobs" }]} />
+          </div>
+
+          {/* SEO Heading & Introduction */}
+          <div className="mb-6 text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-bold mb-3 border border-primary-100">
+              <Sparkles className="h-3.5 w-3.5 text-primary-600" />
+              <span>Verified Career Opportunities in Sri Lanka</span>
+            </div>
+            <h1 className="text-2xl sm:text-4xl font-black text-ink-900 tracking-tight font-heading leading-tight">
+              Find Jobs & Vacancies in Sri Lanka
+            </h1>
+            <p className="text-xs sm:text-sm text-ink-500 mt-2 max-w-3xl leading-relaxed">
+              Explore verified employment openings across Colombo, Kandy, Galle, and islandwide. Search high-growth tech careers, commercial banking vacancies, apparel manufacturing roles, and remote job opportunities with authentic TopJobs reference codes.
+            </p>
+
+            {/* Popular SEO Search Terms */}
+            <div className="mt-3.5 flex items-center flex-wrap gap-1.5 text-xs">
+              <span className="text-ink-400 font-medium mr-1">Popular Searches:</span>
+              {[
+                { label: "Software Engineer", query: "Software Engineer" },
+                { label: "Jobs in Colombo", query: "Colombo" },
+                { label: "Remote Jobs", query: "Remote" },
+                { label: "Banking Careers", category: "cat-banking-finance" },
+                { label: "Apparel & Textiles", category: "cat-manufacturing-apparel" },
+                { label: "Dialog Axiata", query: "Dialog" },
+                { label: "MAS Holdings", query: "MAS Holdings" },
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => {
+                    if (item.query) {
+                      setKeywordInput(item.query);
+                      updateURL(filters, item.query, sortBy);
+                    } else if (item.category) {
+                      handleFilterChange({ ...filters, category: item.category });
+                    }
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-surface border border-border text-ink-600 hover:text-primary-600 hover:border-primary-300 hover:bg-primary-50/50 transition-colors font-medium text-[11px]"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Top Search Bar */}
@@ -564,6 +611,50 @@ function FindJobsContent() {
               )}
             </div>
           </div>
+
+          {/* SEO CAREER GUIDE & INDUSTRY DIRECTORY */}
+          <section className="mt-14 pt-10 border-t border-border text-left">
+            <div className="mb-6">
+              <h2 className="text-lg sm:text-xl font-bold text-ink-900 font-heading">
+                Sri Lanka Career Directory & Employment Insights
+              </h2>
+              <p className="text-xs text-ink-500 mt-1">
+                Helpful guides for navigating the Sri Lankan corporate employment landscape and TopJobs vacancy reference standards.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="p-5 rounded-2xl bg-surface border border-border">
+                <h3 className="text-sm font-bold text-ink-900 font-heading mb-2 flex items-center gap-2">
+                  <Compass className="h-4 w-4 text-primary-600 shrink-0" />
+                  <span>Leading Hiring Sectors in Sri Lanka</span>
+                </h3>
+                <p className="text-xs text-ink-500 leading-relaxed">
+                  Discover open vacancies across major Sri Lankan economic pillars: Software Development, Cloud Architecture, Commercial Banking, Apparel Manufacturing (MAS, Brandix), and Telecommunications (Dialog Axiata).
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-surface border border-border">
+                <h3 className="text-sm font-bold text-ink-900 font-heading mb-2 flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+                  <span>TopJobs Reference Verification</span>
+                </h3>
+                <p className="text-xs text-ink-500 leading-relaxed">
+                  Every listed role includes an authentic employer reference number (e.g. <code>REF-DIA-2024-045</code>), allowing job seekers to trace official vacancies published by verified Sri Lankan corporate entities.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-surface border border-border">
+                <h3 className="text-sm font-bold text-ink-900 font-heading mb-2 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-indigo-600 shrink-0" />
+                  <span>Zero-Login Direct Application</span>
+                </h3>
+                <p className="text-xs text-ink-500 leading-relaxed">
+                  Candidates can browse full job specifications and submit direct applications with their CV without mandatory account registration. Use our AI CV Matcher to rank vacancies by compatibility score.
+                </p>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
 
