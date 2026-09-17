@@ -1,0 +1,38 @@
+import { Interview } from "@/types";
+
+export const mockInterviews: Interview[] = [
+  {
+    id: "int-001",
+    applicationId: "app-001",
+    jobId: "job-001",
+    jobTitle: "Senior Cloud Solutions Architect",
+    companyName: "Dialog Axiata PLC",
+    applicantId: "seeker-01",
+    applicantName: "Sachithra Weerasinghe",
+    employerId: "user-employer-01",
+    scheduledAt: "2024-09-22T10:30:00Z",
+    type: "online",
+    locationOrLink: "https://meet.google.com/xyz-dialog-cloud",
+    instructions: "Please prepare a 15-minute presentation on your architectural approach for a multi-region Kubernetes failover scenario.",
+    status: "scheduled",
+    interviewNotes: "First technical round with VP of Enterprise Architecture and Principal Cloud Architect.",
+    result: "pending",
+  },
+  {
+    id: "int-002",
+    applicationId: "app-004",
+    jobId: "job-005",
+    jobTitle: "Full-Stack Software Engineer (React & Node.js)",
+    companyName: "Sysco LABS Sri Lanka",
+    applicantId: "seeker-01",
+    applicantName: "Sachithra Weerasinghe",
+    employerId: "user-employer-01",
+    scheduledAt: "2024-08-28T14:00:00Z",
+    type: "physical",
+    locationOrLink: "Level 14, Commercial Tower, Havelock City, Colombo 05",
+    instructions: "Please report to the main reception 10 minutes prior with national ID card.",
+    status: "completed",
+    interviewNotes: "Candidate excelled in system architecture and GraphQL problem solving.",
+    result: "passed",
+  },
+];

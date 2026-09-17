@@ -1,0 +1,78 @@
+import { Category } from "@/types";
+
+export const categories: Category[] = [
+  {
+    id: "cat-software-it",
+    slug: "software-it",
+    name: "Software & IT",
+    iconName: "Terminal",
+    description: "Software engineering, cloud architecture, DevOps, QA, and IT support positions across Sri Lanka.",
+    jobCount: 142,
+    featured: true,
+  },
+  {
+    id: "cat-banking-finance",
+    slug: "banking-finance",
+    name: "Banking & Finance",
+    iconName: "Coins",
+    description: "Commercial banking, financial analysis, accounting, risk advisory, and audit careers.",
+    jobCount: 98,
+    featured: true,
+  },
+  {
+    id: "cat-manufacturing-apparel",
+    slug: "manufacturing-apparel",
+    name: "Manufacturing & Apparel",
+    iconName: "Scissors",
+    description: "Apparel manufacturing, production planning, supply chain, textile technology, and plant operations.",
+    jobCount: 84,
+    featured: true,
+  },
+  {
+    id: "cat-marketing-sales",
+    slug: "marketing-sales",
+    name: "Marketing & Sales",
+    iconName: "Rocket",
+    description: "Brand strategy, digital marketing, corporate B2B sales, account management, and PR.",
+    jobCount: 115,
+    featured: true,
+  },
+  {
+    id: "cat-engineering-construction",
+    slug: "engineering-construction",
+    name: "Engineering & Technical",
+    iconName: "DraftingCompass",
+    description: "Civil, electrical, mechanical engineering, project estimation, and site supervision.",
+    jobCount: 67,
+    featured: true,
+  },
+  {
+    id: "cat-telecom-network",
+    slug: "telecommunications",
+    name: "Telecommunications",
+    iconName: "Satellite",
+    description: "5G network operations, fiber infrastructure, telecom billing systems, and RF engineering.",
+    jobCount: 45,
+    featured: false,
+  },
+  {
+    id: "cat-healthcare-pharma",
+    slug: "healthcare-pharma",
+    name: "Healthcare & Life Sciences",
+    iconName: "Activity",
+    description: "Medical officers, clinical lab technologists, hospital administration, and pharmaceutical sales.",
+    jobCount: 52,
+    featured: false,
+  },
+  {
+    id: "cat-hospitality-tourism",
+    slug: "hospitality-tourism",
+    name: "Hospitality & Tourism",
+    iconName: "Palmtree",
+    description: "Luxury resort management, culinary leadership, guest relations, and travel tour operations.",
+    jobCount: 76,
+    featured: true,
+  },
+];
+
+export const mockCategories = categories;
