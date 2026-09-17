@@ -54,6 +54,12 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener("skillforz:notification", handleNewNotif);
   }, []);
 
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setNotifDropdownOpen(false);
+    setUserDropdownOpen(false);
+  }, [pathname]);
+
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Find Jobs", href: "/find-jobs" },
@@ -66,12 +72,13 @@ export const Navbar: React.FC = () => {
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-40 w-full bg-surface/95 backdrop-blur-md transition-all duration-200 border-b border-border/80",
-        isScrolled ? "shadow-md shadow-ink-900/5 py-2.5" : "py-3.5"
-      )}
-    >
+    <>
+      <header
+        className={cn(
+          "sticky top-0 z-40 w-full bg-surface/95 backdrop-blur-md transition-all duration-200 border-b border-border/80",
+          isScrolled ? "shadow-md shadow-ink-900/5 py-2.5" : "py-3.5"
+        )}
+      >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
@@ -138,7 +145,7 @@ export const Navbar: React.FC = () => {
             </button>
 
             {notifDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-border bg-surface p-4 shadow-xl z-50 text-left">
+              <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 max-w-sm rounded-2xl border border-border bg-surface p-4 shadow-xl z-50 text-left">
                 <div className="flex items-center justify-between pb-3 border-b border-border">
                   <span className="text-sm font-bold text-ink-900">Notifications</span>
                   <span className="text-xs px-2 py-0.5 rounded-full bg-primary-100 text-primary-600 font-semibold">
@@ -266,116 +273,118 @@ export const Navbar: React.FC = () => {
           {/* Mobile Hamburger Toggle */}
           <button
             type="button"
-            onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden p-2 rounded-xl text-ink-500 hover:bg-bg hover:text-ink-900 transition-colors"
-            title="Open Menu"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            className="md:hidden p-2.5 rounded-xl text-ink-600 hover:bg-bg hover:text-ink-900 transition-colors cursor-pointer touch-manipulation focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            title={mobileMenuOpen ? "Close Menu" : "Open Menu"}
           >
-            <Menu className="h-6 w-6" />
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </div>
+    </header>
 
-      {/* Slide-in Mobile Drawer */}
-      <Drawer
-        isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-        side="left"
-        width="sm"
-        title={
-          <div className="flex items-center gap-2">
-            <Compass className="h-5 w-5 text-primary-600" />
-            <span className="font-bold text-ink-900">SkillForz Menu</span>
-          </div>
-        }
-      >
-        <div className="flex flex-col h-full justify-between">
-          <div className="space-y-1 py-2">
-            {navLinks.map((link) => {
-              const isActive =
-                link.href === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(link.href);
+    {/* Slide-in Mobile Drawer */}
+    <Drawer
+      isOpen={mobileMenuOpen}
+      onClose={() => setMobileMenuOpen(false)}
+      side="left"
+      width="sm"
+      title={
+        <div className="flex items-center gap-2">
+          <Compass className="h-5 w-5 text-primary-600" />
+          <span className="font-bold text-ink-900">SkillForz Menu</span>
+        </div>
+      }
+    >
+      <div className="flex flex-col h-full justify-between">
+        <div className="space-y-1 py-2">
+          {navLinks.map((link) => {
+            const isActive =
+              link.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(link.href);
 
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    "flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-colors",
-                    isActive
-                      ? "bg-primary-50 text-primary-600"
-                      : "text-ink-700 hover:bg-bg hover:text-ink-900"
-                  )}
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  "flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-colors",
+                  isActive
+                    ? "bg-primary-50 text-primary-600"
+                    : "text-ink-700 hover:bg-bg hover:text-ink-900"
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+
+          <div className="pt-4 border-t border-border mt-4 space-y-2">
+            <Link
+              href="/find-jobs?aiMatch=true"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-xl border border-primary-200"
+            >
+              <Sparkles className="h-4 w-4 text-primary-600 animate-pulse" />
+              <span>AI CV Matcher & Alerts</span>
+            </Link>
+
+            <Link
+              href="/post-job"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-sm"
+            >
+              <SendHorizontal className="h-4 w-4" />
+              Post a Vacancy
+            </Link>
+
+            {isLoggedIn && user ? (
+              <>
+                <p className="text-xs uppercase font-bold text-ink-500 px-4 pt-3 pb-1 tracking-wider">
+                  Verified Employer ({user.company || user.name})
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-accent-danger hover:bg-red-50 rounded-xl text-left"
                 >
-                  {link.label}
-                </Link>
-              );
-            })}
-
-            <div className="pt-4 border-t border-border mt-4 space-y-2">
-              <Link
-                href="/find-jobs?aiMatch=true"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-xl border border-primary-200"
-              >
-                <Sparkles className="h-4 w-4 text-primary-600 animate-pulse" />
-                <span>AI CV Matcher & Alerts</span>
-              </Link>
-
-              <Link
-                href="/post-job"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-sm"
-              >
-                <SendHorizontal className="h-4 w-4" />
-                Post a Vacancy
-              </Link>
-
-              {isLoggedIn && user ? (
-                <>
-                  <p className="text-xs uppercase font-bold text-ink-500 px-4 pt-3 pb-1 tracking-wider">
-                    Verified Employer ({user.company || user.name})
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <div className="pt-4 space-y-3">
+                <div className="p-3 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-xs text-emerald-950">
+                  <span className="font-bold flex items-center gap-1.5 text-accent-success">
+                    <BadgeCheck className="h-4 w-4 shrink-0" /> Job Seekers: No Sign-In Needed
+                  </span>
+                  <p className="text-[11px] text-emerald-800 mt-1 leading-relaxed">
+                    You can browse all vacancies and apply directly to any employer without creating an account.
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      logout();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-accent-danger hover:bg-red-50 rounded-xl text-left"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <div className="pt-4 space-y-3">
-                  <div className="p-3 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-xs text-emerald-950">
-                    <span className="font-bold flex items-center gap-1.5 text-accent-success">
-                      <BadgeCheck className="h-4 w-4 shrink-0" /> Job Seekers: No Sign-In Needed
-                    </span>
-                    <p className="text-[11px] text-emerald-800 mt-1 leading-relaxed">
-                      You can browse all vacancies and apply directly to any employer without creating an account.
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-xs uppercase font-bold text-ink-400 px-1 pb-1.5 tracking-wider">
-                      For Companies & Recruiters
-                    </p>
-                    <Link href="/login?redirect=/post-job" onClick={() => setMobileMenuOpen(false)} className="block w-full">
-                      <Button variant="outline" className="w-full text-xs font-semibold">
-                        Employer Sign In
-                      </Button>
-                    </Link>
-                  </div>
                 </div>
-              )}
-            </div>
+
+                <div>
+                  <p className="text-xs uppercase font-bold text-ink-400 px-1 pb-1.5 tracking-wider">
+                    For Companies & Recruiters
+                  </p>
+                  <Link href="/login?redirect=/post-job" onClick={() => setMobileMenuOpen(false)} className="block w-full">
+                    <Button variant="outline" className="w-full text-xs font-semibold">
+                      Employer Sign In
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      </Drawer>
-    </header>
+      </div>
+    </Drawer>
+  </>
   );
 };

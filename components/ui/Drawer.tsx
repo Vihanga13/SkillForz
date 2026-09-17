@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,12 @@ export const Drawer: React.FC<DrawerProps> = ({
   width = "md",
   className,
 }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -46,19 +53,21 @@ export const Drawer: React.FC<DrawerProps> = ({
   }, [isOpen]);
 
   const widthStyles = {
-    sm: "max-w-xs",
-    md: "max-w-md",
-    lg: "max-w-lg",
-    xl: "max-w-2xl",
-    full: "max-w-full",
+    sm: "w-[85vw] max-w-xs",
+    md: "w-[85vw] max-w-md",
+    lg: "w-[90vw] max-w-lg",
+    xl: "w-[90vw] max-w-2xl",
+    full: "w-full max-w-full",
   };
 
   const initialPosition = side === "right" ? { x: "100%" } : { x: "-100%" };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-[100] flex">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -66,7 +75,7 @@ export const Drawer: React.FC<DrawerProps> = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-ink-900/50 backdrop-blur-sm"
+            className="fixed inset-0 bg-ink-900/60 backdrop-blur-sm"
           />
 
           {/* Drawer Body */}
@@ -76,7 +85,7 @@ export const Drawer: React.FC<DrawerProps> = ({
             exit={initialPosition}
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
             className={cn(
-              "relative flex flex-col w-full bg-surface shadow-2xl z-10 h-full overflow-hidden text-left",
+              "relative flex flex-col bg-surface shadow-2xl z-10 h-full overflow-hidden text-left",
               side === "right" ? "ml-auto" : "mr-auto",
               widthStyles[width],
               className
@@ -91,10 +100,10 @@ export const Drawer: React.FC<DrawerProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-lg p-1.5 text-ink-500 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                className="rounded-lg p-1.5 text-ink-500 hover:bg-primary-50 hover:text-primary-600 transition-colors cursor-pointer"
+                aria-label="Close drawer"
               >
                 <X className="h-5 w-5" />
-                <span className="sr-only">Close</span>
               </button>
             </div>
 
@@ -102,6 +111,7 @@ export const Drawer: React.FC<DrawerProps> = ({
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
