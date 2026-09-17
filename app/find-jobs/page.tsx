@@ -25,6 +25,9 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { jobs } from "@/lib/data/jobs";
 import { categories } from "@/lib/data/categories";
+import { AICVMatcherModal } from "@/components/AICVMatcherModal";
+import { ParsedCV, JobMatchResult } from "@/lib/ai/cvMatcher";
+import { Bell, CheckCircle2 } from "lucide-react";
 
 function FindJobsContent() {
   const router = useRouter();
@@ -44,8 +47,38 @@ function FindJobsContent() {
   const [keywordInput, setKeywordInput] = useState(paramKeyword || paramRef);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<"newest" | "relevance">(paramSort as "newest" | "relevance");
+  const [sortBy, setSortBy] = useState<"newest" | "relevance" | "ai-match">(
+    (paramSort as any) || "newest"
+  );
   const [isLoading, setIsLoading] = useState(false);
+
+  // AI CV Matcher state
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+  const [activeCV, setActiveCV] = useState<ParsedCV | null>(null);
+  const [jobMatchMap, setJobMatchMap] = useState<Record<string, JobMatchResult>>({});
+
+  useEffect(() => {
+    if (searchParams.get("aiMatch") === "true") {
+      setIsAIModalOpen(true);
+    }
+  }, [searchParams]);
+
+  const handleApplyAIFilter = (cv: ParsedCV, matches: JobMatchResult[]) => {
+    setActiveCV(cv);
+    const map: Record<string, JobMatchResult> = {};
+    matches.forEach((m) => {
+      map[m.job.id] = m;
+    });
+    setJobMatchMap(map);
+    setSortBy("ai-match");
+    setCurrentPage(1);
+  };
+
+  const handleClearAIFilter = () => {
+    setActiveCV(null);
+    setJobMatchMap({});
+    setSortBy("newest");
+  };
 
   const [filters, setFilters] = useState<FilterState>({
     jobTypes: paramJobType,
@@ -172,12 +205,17 @@ function FindJobsContent() {
   // Sorting
   const sortedJobs = useMemo(() => {
     const list = [...filteredJobs];
+    if (sortBy === "ai-match" && activeCV) {
+      return list.sort(
+        (a, b) => (jobMatchMap[b.id]?.score || 0) - (jobMatchMap[a.id]?.score || 0)
+      );
+    }
     if (sortBy === "newest") {
       return list.sort((a, b) => new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime());
     }
     // Relevance / Hot
     return list.sort((a, b) => (b.isHot ? 1 : 0) - (a.isHot ? 1 : 0));
-  }, [filteredJobs, sortBy]);
+  }, [filteredJobs, sortBy, activeCV, jobMatchMap]);
 
   // Pagination (6 per page)
   const itemsPerPage = 6;
@@ -237,6 +275,16 @@ function FindJobsContent() {
                 <Button type="submit" variant="primary" className="flex-1 md:flex-initial">
                   Search
                 </Button>
+                {/* AI CV Matcher Trigger */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsAIModalOpen(true)}
+                  className="border-primary-200 text-primary-700 bg-primary-50/70 hover:bg-primary-100 flex items-center gap-1.5 shrink-0"
+                  leftIcon={<Sparkles className="h-4 w-4 text-primary-600 animate-pulse" />}
+                >
+                  <span>AI CV Match</span>
+                </Button>
                 {/* Mobile Filter Drawer Trigger */}
                 <button
                   type="button"
@@ -254,6 +302,79 @@ function FindJobsContent() {
               </div>
             </form>
           </div>
+
+          {/* AI SMART MATCH BANNER */}
+          {!activeCV ? (
+            <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-ink-900 via-primary-950 to-ink-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl border border-primary-700/40 relative overflow-hidden text-left">
+              <div className="absolute right-0 top-0 w-64 h-64 bg-primary-500/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="relative z-10 flex items-start sm:items-center gap-3.5">
+                <div className="h-10 w-10 rounded-xl bg-primary-600 text-white flex items-center justify-center shrink-0 shadow-md">
+                  <Sparkles className="h-5 w-5 animate-pulse" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-black tracking-tight font-heading">
+                      AI CV Matcher & Precision Filter
+                    </h3>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                      Live Radar
+                    </span>
+                  </div>
+                  <p className="text-xs text-primary-200 mt-0.5 max-w-xl leading-relaxed">
+                    Upload or paste your CV to rank all {jobs.length} vacancies by semantic skill compatibility, identify qualification gaps, and activate instant match alerts.
+                  </p>
+                </div>
+              </div>
+
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setIsAIModalOpen(true)}
+                className="relative z-10 bg-white text-primary-700 hover:bg-primary-50 font-bold shrink-0 text-xs shadow-md"
+                leftIcon={<Sparkles className="h-3.5 w-3.5 text-primary-600" />}
+              >
+                Match with My CV
+              </Button>
+            </div>
+          ) : (
+            <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm text-left">
+              <div className="flex items-start sm:items-center gap-3">
+                <div className="h-9 w-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-black text-emerald-950 font-heading">
+                      AI Match Filter Active: {activeCV.name} ({activeCV.title})
+                    </span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                      {Object.keys(jobMatchMap).length} Roles Ranked by Match %
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-emerald-700 mt-0.5">
+                    Vacancies are sorted by candidate skill overlap & experience level. Real-time alert notifications dispatched.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsAIModalOpen(true)}
+                  className="text-xs font-bold text-emerald-800 bg-white px-3 py-1.5 rounded-xl border border-emerald-200 hover:bg-emerald-100 transition-colors shadow-sm"
+                >
+                  Rescan / Change CV
+                </button>
+                <button
+                  type="button"
+                  onClick={handleClearAIFilter}
+                  className="text-xs font-bold text-ink-500 hover:text-accent-danger px-2 py-1.5 transition-colors"
+                >
+                  Clear AI Filter &times;
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Active Filter Chips Strip */}
           {activeFilterCount > 0 && (
@@ -371,12 +492,13 @@ function FindJobsContent() {
                   <select
                     value={sortBy}
                     onChange={(e) => {
-                      const next = e.target.value as "newest" | "relevance";
+                      const next = e.target.value as "newest" | "relevance" | "ai-match";
                       setSortBy(next);
                       updateURL(filters, keywordInput, next);
                     }}
                     className="rounded-lg border border-border bg-surface px-2.5 py-1 text-xs font-semibold text-ink-900 focus:outline-none focus:border-primary-600 cursor-pointer shadow-sm"
                   >
+                    {activeCV && <option value="ai-match">✨ AI Match Score (Highest)</option>}
                     <option value="newest">Newest First</option>
                     <option value="relevance">Relevance / Hot</option>
                   </select>
@@ -396,7 +518,12 @@ function FindJobsContent() {
               {!isLoading && paginatedJobs.length > 0 && (
                 <div className="space-y-4">
                   {paginatedJobs.map((job) => (
-                    <JobCard key={job.id} job={job} />
+                    <JobCard
+                      key={job.id}
+                      job={job}
+                      matchScore={jobMatchMap[job.id]?.score}
+                      matchedSkills={jobMatchMap[job.id]?.matchedSkills}
+                    />
                   ))}
                 </div>
               )}
@@ -458,6 +585,13 @@ function FindJobsContent() {
       </Drawer>
 
       <Footer />
+      {/* AICVMatcherModal */}
+      <AICVMatcherModal
+        isOpen={isAIModalOpen}
+        onClose={() => setIsAIModalOpen(false)}
+        onApplyAIFilter={handleApplyAIFilter}
+        initialCV={activeCV}
+      />
     </div>
   );
 }

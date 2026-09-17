@@ -22,6 +22,8 @@ import { Drawer } from "./ui/Drawer";
 import { Avatar } from "./ui/Avatar";
 import { cn } from "@/lib/utils";
 import { mockNotifications } from "@/lib/data/notifications";
+import { getStoredNotifications } from "@/lib/ai/notificationService";
+import { Notification } from "@/types";
 import { useAuth } from "@/components/AuthProvider";
 
 export const Navbar: React.FC = () => {
@@ -40,6 +42,18 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
+
+  useEffect(() => {
+    setNotifications(getStoredNotifications());
+
+    const handleNewNotif = () => {
+      setNotifications(getStoredNotifications());
+    };
+    window.addEventListener("skillforz:notification", handleNewNotif);
+    return () => window.removeEventListener("skillforz:notification", handleNewNotif);
+  }, []);
+
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Find Jobs", href: "/find-jobs" },
@@ -49,7 +63,7 @@ export const Navbar: React.FC = () => {
     { label: "Blog", href: "/blog" },
   ];
 
-  const unreadCount = mockNotifications.filter((n) => !n.isRead).length;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
     <header
@@ -132,14 +146,19 @@ export const Navbar: React.FC = () => {
                   </span>
                 </div>
                 <div className="divide-y divide-border/60 max-h-80 overflow-y-auto mt-2">
-                  {mockNotifications.map((n) => (
-                    <div key={n.id} className="py-2.5 flex items-start gap-3 hover:bg-bg/60 p-2 rounded-xl transition-colors">
+                  {notifications.slice(0, 6).map((n) => (
+                    <Link
+                      key={n.id}
+                      href={n.link || "/find-jobs"}
+                      onClick={() => setNotifDropdownOpen(false)}
+                      className="py-2.5 flex items-start gap-3 hover:bg-bg/80 p-2 rounded-xl transition-colors block text-left"
+                    >
                       <div className="h-2 w-2 rounded-full bg-primary-600 mt-1.5 shrink-0" />
-                      <div className="flex-1">
-                        <p className="text-xs font-semibold text-ink-900">{n.title}</p>
-                        <p className="text-xs text-ink-500 mt-0.5">{n.message}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-ink-900 line-clamp-1">{n.title}</p>
+                        <p className="text-xs text-ink-500 mt-0.5 line-clamp-2 leading-relaxed">{n.message}</p>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
                 <div className="pt-2 border-t border-border mt-2 text-center">
@@ -154,6 +173,15 @@ export const Navbar: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* AI CV Matcher Button */}
+          <Link
+            href="/find-jobs?aiMatch=true"
+            className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-primary-700 bg-primary-50 hover:bg-primary-100 border border-primary-200 transition-all shadow-sm"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-primary-600 animate-pulse" />
+            <span>AI CV Match</span>
+          </Link>
 
           {/* Post a Vacancy Button */}
           <Link href="/post-job">
@@ -285,11 +313,20 @@ export const Navbar: React.FC = () => {
               );
             })}
 
-            <div className="pt-4 border-t border-border mt-4 space-y-1">
+            <div className="pt-4 border-t border-border mt-4 space-y-2">
+              <Link
+                href="/find-jobs?aiMatch=true"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-xl border border-primary-200"
+              >
+                <Sparkles className="h-4 w-4 text-primary-600 animate-pulse" />
+                <span>AI CV Matcher & Alerts</span>
+              </Link>
+
               <Link
                 href="/post-job"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-xl"
+                className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-sm"
               >
                 <SendHorizontal className="h-4 w-4" />
                 Post a Vacancy

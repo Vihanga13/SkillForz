@@ -9,6 +9,7 @@ import {
   BadgeCheck,
   Timer,
   ArrowUpRight,
+  Sparkles,
 } from "lucide-react";
 import { Job } from "@/types";
 import { Avatar } from "./ui/Avatar";
@@ -24,9 +25,16 @@ import { useToast } from "./ui/Toast";
 export interface JobCardProps {
   job: Job;
   isBookmarkedDefault?: boolean;
+  matchScore?: number;
+  matchedSkills?: string[];
 }
 
-export const JobCard: React.FC<JobCardProps> = ({ job, isBookmarkedDefault = false }) => {
+export const JobCard: React.FC<JobCardProps> = ({
+  job,
+  isBookmarkedDefault = false,
+  matchScore,
+  matchedSkills,
+}) => {
   const [bookmarked, setBookmarked] = useState(isBookmarkedDefault);
   const { success } = useToast();
 
@@ -65,6 +73,12 @@ export const JobCard: React.FC<JobCardProps> = ({ job, isBookmarkedDefault = fal
                 {job.referenceNumber}
               </span>
               <span className="text-ink-500 font-medium">{job.categoryName}</span>
+              {matchScore !== undefined && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-black px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
+                  <Sparkles className="h-3 w-3 text-emerald-600" />
+                  <span>{matchScore}% Match</span>
+                </span>
+              )}
               {daysInfo.isExpiringSoon && (
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold text-accent-danger bg-red-50 px-2 py-0.5 rounded-md border border-red-100">
                   <Timer className="h-3 w-3" />
@@ -110,14 +124,22 @@ export const JobCard: React.FC<JobCardProps> = ({ job, isBookmarkedDefault = fal
               <Badge variant="secondary" size="sm">
                 {job.experienceLevel}
               </Badge>
-              {job.skills.slice(0, 3).map((skill) => (
-                <span
-                  key={skill}
-                  className="text-[11px] px-2 py-0.5 rounded-md bg-bg text-ink-500 border border-border"
-                >
-                  {skill}
-                </span>
-              ))}
+              {job.skills.slice(0, 3).map((skill) => {
+                const isMatched = matchedSkills?.includes(skill);
+                return (
+                  <span
+                    key={skill}
+                    className={`text-[11px] px-2 py-0.5 rounded-md border transition-colors ${
+                      isMatched
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-200 font-semibold"
+                        : "bg-bg text-ink-500 border border-border"
+                    }`}
+                  >
+                    {isMatched && "✓ "}
+                    {skill}
+                  </span>
+                );
+              })}
               {job.skills.length > 3 && (
                 <span className="text-[10px] text-ink-500 self-center">
                   +{job.skills.length - 3}
