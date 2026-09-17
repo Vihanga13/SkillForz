@@ -1,9 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/post-job/page": "app/post-job/page.js",
-  "/about/page": "app/about/page.js",
-  "/(auth)/login/page": "app/(auth)/login/page.js",
-  "/find-jobs/page": "app/find-jobs/page.js",
-  "/find-jobs/[slug]/page": "app/find-jobs/[slug]/page.js",
-  "/(auth)/register/page": "app/(auth)/register/page.js"
-}
